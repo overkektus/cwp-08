@@ -17,6 +17,25 @@ const server = net.createServer((client) => {
     if(req.key === 'worker' && req.method) {
       switch(req.method) {
         case 'start':
+          if(req.interval) {
+            let id = getUniqID();
+            let file = `./files/${id}.json`;
+            let proc = childProcess.spawn('node', ['worker.js', file, req.interval], { detached: true });
+            let worker = {
+              proc: proc,
+              id: id,
+              startedOn: Date.now(),
+              file: file
+            };
+            workers.push(worker);
+            let res = {
+              id: worker.id,
+              startedOn: worker.startedOn,
+              meta: 'add'
+            };
+            console.log(res);
+            client.write(JSON.stringify(res));
+          }
           break;
         case 'get':
           break;
@@ -34,3 +53,7 @@ const server = net.createServer((client) => {
 server.listen(port, () => {
   console.log(`Server listening on localhost:${port}`);
 });
+
+const getUniqID = () => {
+  return Date.now() + seed++;
+};
