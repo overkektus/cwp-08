@@ -38,6 +38,10 @@ const server = net.createServer((client) => {
           }
           break;
         case 'get':
+          let w = [];
+          for(let i = 0; i < workers.length; i++) {
+            let num
+          }
           break;
         case 'remove':
           break;
